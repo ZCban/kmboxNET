@@ -95,7 +95,7 @@ print(kmNet.isdown_left())  # Controlla stato pulsante sinistro""
 
 Assicurati di sostituire i valori come l'indirizzo IP, il numero di porta e l'UUID con quelli specifici del tuo dispositivo.
 
-#EN
+# EN
 
 The kmboxNet library provides an interface for programming physical keyboard and mouse input controls over the network, usable in Python environments. This guide offers an overview of how to set up and use kmboxNet for your projects.
 
