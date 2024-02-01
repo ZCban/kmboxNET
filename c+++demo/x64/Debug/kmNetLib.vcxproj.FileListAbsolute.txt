@@ -1,0 +1,2 @@
+\\192.168.2.185\home\esp32\kmboxnet\x64\Debug\kmNetLib.exe
+E:\opencv\kmboxnet\x64\Debug\kmNetLib.exe
