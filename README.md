@@ -1,4 +1,4 @@
-kmboxNet per Python
+# kmboxNet per Python
 La libreria kmboxNet offre un'interfaccia per programmare controlli di input fisici per tastiera e mouse via rete, utilizzabile in ambienti Python. Questa guida fornisce una panoramica su come configurare e utilizzare kmboxNet per i tuoi progetti.
 
 Introduzione
@@ -78,16 +78,8 @@ mask_keyboard(key): Blocca un tasto specifico della tastiera.
 unmask_keyboard(key): Sblocca un tasto specifico della tastiera.
 unmask_all(): Rimuove tutti i blocchi attivi.
 
-Funzioni di Configurazione
 
-reboot(): Riavvia il dispositivo.
-setip_port(ip, port): Configura l'indirizzo IP e il numero di porta del dispositivo. Richiede riavvio.
-lcd_color(color): Imposta un colore specifico sul display LCD del dispositivo.
-lcd_picture(data), lcd_picture_bottom(data): Mostra un'immagine personalizzata o sulla metà inferiore del display LCD.
-
-Esempi di Utilizzo
-
-Ecco alcuni esempi su come utilizzare le funzioni principali:
+esempi su come utilizzare le funzioni principali:
 
 
 ""# Inizializzazione
