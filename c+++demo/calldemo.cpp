@@ -156,11 +156,11 @@ int main() {
 
     // Simulate mouse movement
     printf("Simulating mouse movement...\r\n");
-    kmNet_move(100, 0); // Move mouse right
+    kmNet_mouse_move(100, 0); // Move mouse right
     Sleep(100);
-    kmNet_move(-100, 0); // Move mouse left
+    kmNet_mouse_move(-100, 0); // Move mouse left
     Sleep(100);
-    kmNet_move_auto((100, 0),200)//simulate human mouse movement
+    kmNet_mouse_move_auto((100, 0),200)//simulate human mouse movement
 
     // Re-enable physical mouse monitoring
     kmNet_monitor(1); // Enable keyboard and mouse monitoring function
