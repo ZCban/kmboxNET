@@ -2,9 +2,14 @@
 //
 
 #include <iostream>
+#include <stdio.h>
+#include <Winsock2.h>
+#include "math.h"
 #include "NetConfig/kmboxNet.h"
 #include "NetConfig/HidTable.h"
 #include "picture.h"
+
+#pragma warning(disable : 4996)
 
 int main() {
     int ret;
@@ -123,6 +128,47 @@ int main() {
         }
         Sleep(1); // Sleep to avoid high CPU usage
     }
+
+    // Additional examples of key presses and mouse movements
+    printf("Simulate mouse click and key press examples:\r\n");
+
+    // Simulate left mouse click
+    printf("Simulating left mouse click...\r\n");
+    kmNet_mouse_left(1); // Press left mouse button
+    Sleep(100); // Hold for 100ms
+    kmNet_mouse_left(0); // Release left mouse button
+    Sleep(100);
+
+    // Simulate right mouse click
+    printf("Simulating right mouse click...\r\n");
+    kmNet_mouse_right(1); // Press right mouse button
+    Sleep(100); // Hold for 100ms
+    kmNet_mouse_right(0); // Release right mouse button
+    Sleep(100);
+
+    // Simulate middle mouse click
+    printf("Simulating middle mouse click...\r\n");
+    kmNet_mouse_middle(1); // Press middle mouse button
+    Sleep(100); // Hold for 100ms
+    kmNet_mouse_middle(0); // Release middle mouse button
+    Sleep(100);
+
+    // Simulate keyboard key press
+    printf("Simulating keyboard key press 'A'...\r\n");
+    kmNet_keydown(KEY_A); // Press 'A' key
+    Sleep(100); // Hold for 100ms
+    kmNet_keyup(KEY_A); // Release 'A' key
+    Sleep(100);
+
+    // Simulate mouse movement
+    printf("Simulating mouse movement...\r\n");
+    kmNet_mouse_move(100, 0); // Move mouse right
+    Sleep(100);
+    kmNet_mouse_move(-100, 0); // Move mouse left
+    Sleep(100);
+
+    // Re-enable physical mouse monitoring
+    kmNet_monitor(1); // Enable keyboard and mouse monitoring function
 
 #if 0 // Mask mouse test
     printf("Physical keyboard and mouse masking test:\r\n");
