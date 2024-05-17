@@ -153,19 +153,14 @@ int main() {
     kmNet_mouse_middle(0); // Release middle mouse button
     Sleep(100);
 
-    // Simulate keyboard key press
-    printf("Simulating keyboard key press 'A'...\r\n");
-    kmNet_keydown(KEY_A); // Press 'A' key
-    Sleep(100); // Hold for 100ms
-    kmNet_keyup(KEY_A); // Release 'A' key
-    Sleep(100);
 
     // Simulate mouse movement
     printf("Simulating mouse movement...\r\n");
-    kmNet_mouse_move(100, 0); // Move mouse right
+    kmNet_move(100, 0); // Move mouse right
     Sleep(100);
-    kmNet_mouse_move(-100, 0); // Move mouse left
+    kmNet_move(-100, 0); // Move mouse left
     Sleep(100);
+    kmNet_move_auto((100, 0),200)//simulate human mouse movement
 
     // Re-enable physical mouse monitoring
     kmNet_monitor(1); // Enable keyboard and mouse monitoring function
