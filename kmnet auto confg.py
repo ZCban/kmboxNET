@@ -4,6 +4,7 @@ import time
 import ctypes
 from ctypes import wintypes
 import win32com.client
+import random
 
 class DriverInstaller:
     def __init__(self, driver_name, exe_name, main_window_name):
@@ -138,6 +139,6 @@ network_configurator = NetworkConfigurator()
 network_configurator.list_ethernet_devices()
 interface_name = network_configurator.get_interface_name("USB 2.0 Ethernet Adapter")
 if interface_name:
-    network_configurator.set_static_ip(interface_name, "192.168.2.187", "255.255.255.0")
-
+    random_ip = f"192.168.2.{random.randint(200, 250)}"
+    network_configurator.set_static_ip(interface_name, random_ip, "255.255.255.0")
 
