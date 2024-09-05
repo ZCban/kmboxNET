@@ -1,5 +1,5 @@
 ################
-# EN #IT
+# EN # IT
 ################
 
 The kmboxNet library provides an interface for programming physical keyboard and mouse input controls over the network, usable in Python environments. This guide offers an overview of how to set up and use kmboxNet for your projects.
