@@ -100,7 +100,7 @@ Make sure to replace values like the IP address, port number, and UUID with thos
 - Print the generated `VID` and `PID` values.
 - Auto close after 10s
 
-- Example Output:
+Example Output:
 - Configurazione caricata: IP = 192.168.1.100, Porta = 8080, UUID = 9FC05414
 - Tentativo di connessione al dispositivo su 192.168.1.100:8080...
 - KmBoxNet Inizializzato correttamente.
