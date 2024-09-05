@@ -101,15 +101,15 @@ Make sure to replace values like the IP address, port number, and UUID with thos
 - Auto close after 10s
 
 - Example Output:
-  Configurazione caricata: IP = 192.168.1.100, Porta = 8080, UUID = 9FC05414
-  Tentativo di connessione al dispositivo su 192.168.1.100:8080...
-  KmBoxNet Inizializzato correttamente.
-  Nuova configurazione generata - IP: 192.168.2.153, Porta: 32451
-  Nuova configurazione di IP e Porta impostata con successo.
-  Dispositivo in fase di riavvio...
-  Dispositivo riavviato correttamente.
-  VID randomizzato: 0x3e8f
-  PID randomizzato: 0x7d52
-  VID e PID impostati con successo.
-  Dispositivo completamente configurato e riavviato con le nuove impostazioni.
+- Configurazione caricata: IP = 192.168.1.100, Porta = 8080, UUID = 9FC05414
+- Tentativo di connessione al dispositivo su 192.168.1.100:8080...
+- KmBoxNet Inizializzato correttamente.
+- Nuova configurazione generata - IP: 192.168.2.153, Porta: 32451
+- Nuova configurazione di IP e Porta impostata con successo.
+- Dispositivo in fase di riavvio...
+- Dispositivo riavviato correttamente.
+- VID randomizzato: 0x3e8f
+- PID randomizzato: 0x7d52
+- VID e PID impostati con successo.
+- Dispositivo completamente configurato e riavviato con le nuove impostazioni.
 
