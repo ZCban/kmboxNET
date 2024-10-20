@@ -113,3 +113,6 @@ Example Output:
 - VID e PID impostati con successo.
 - Dispositivo completamente configurato e riavviato con le nuove impostazioni.
 
+## Kmnet auto confg.py (new 20/10/20204)
+- aggiunginto controllo del ping dopo aver configurato ip di kmbox in windows consente una facile interpretazione per capire se il collegamento funziona 
+
