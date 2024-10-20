@@ -131,6 +131,17 @@ class NetworkConfigurator:
         except subprocess.CalledProcessError as e:
             print(f"Errore nell'impostazione dell'indirizzo IP: {e}")
 
+    def ping_ip(self, ip_address):
+        command = f"ping {ip_address}"
+        try:
+            output = subprocess.run(command, check=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if "TTL=" in output.stdout:
+                print(f"Ping verso {ip_address} riuscito.")
+            else:
+                print(f"Ping verso {ip_address} fallito.")
+        except subprocess.CalledProcessError as e:
+            print(f"Errore durante il ping dell'indirizzo IP {ip_address}: {e}")
+
 # Utilizzo delle classi
 driver_installer = DriverInstaller("WCHUSBNIC.INF", "WCHUSBNIC.EXE", "DriverSetup")
 driver_installer.install_driver()
@@ -139,10 +150,12 @@ network_configurator = NetworkConfigurator()
 network_configurator.list_ethernet_devices()
 interface_name = network_configurator.get_interface_name("USB2.0 Ethernet Adapter")
 if not  interface_name:
-    interface_name = network_configurator.get_interface_name("USB2.0 Ethernet Adapter")
+    interface_name = network_configurator.get_interface_name("USB 2.0 Ethernet Adapter")
 if interface_name:
-    random_ip = f"192.168.2.{random.randint(200, 250)}"
+    random_ip = f"192.168.2.{random.randint(200, 240)}"
     network_configurator.set_static_ip(interface_name, random_ip, "255.255.255.0")
+    #time.sleep(2)
+    print('verifico connessione,attendere')
+    network_configurator.ping_ip(random_ip)
 time.sleep(2)
-
 
