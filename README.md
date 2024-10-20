@@ -114,5 +114,8 @@ Example Output:
 - Dispositivo completamente configurato e riavviato con le nuove impostazioni.
 
 ## Kmnet auto confg.py (new 20/10/20204)
-- aggiunginto controllo del ping dopo aver configurato ip di kmbox in windows consente una facile interpretazione per capire se il collegamento funziona 
+- aggiunginto controllo del ping dopo aver configurato ip di kmbox in windows consente una facile interpretazione per capire se il collegamento funziona
+- added ping control after configuring ip of kmbox in windows allows easy interpretation to understand if the connection works
+- aggiunta autoinstallazione del modulo pyd di kmboxnet nei moduli python (potrai importare kmboxNet nei tuoi codici senza dover avere il file pyd nella cartella del codice)
+- added self-installation of the kmboxnet pyd module in python modules (you can import kmboxNet into your codes without having to have the pyd file in the code folder)
 
