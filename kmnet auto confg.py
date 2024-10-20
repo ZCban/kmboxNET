@@ -5,6 +5,75 @@ import ctypes
 from ctypes import wintypes
 import win32com.client
 import random
+import sys
+import os
+import shutil
+import site
+
+
+class InstallationModule:
+    def __init__(self):
+        self.version = sys.version_info
+        self.version_str = f"cp{self.version.major}{self.version.minor}"
+        self.site_packages = site.getsitepackages()
+        if not self.site_packages or len(self.site_packages) < 2:
+            raise ValueError("Impossibile trovare la directory dei moduli di Python.")
+        self.target_folder = self.site_packages[1]  # Usa il secondo percorso (Lib/site-packages)
+
+        if not os.path.exists(self.target_folder):
+            raise ValueError("Impossibile trovare la directory dei moduli di Python.")
+
+    def execute(self):
+        print(self.get_python_version())
+        print(site.getsitepackages())
+        self.find_and_copy_pyd_file()
+
+    def get_python_version(self):
+        return f"Python {self.version.major}.{self.version.minor}"
+
+    def find_and_copy_pyd_file(self):
+        # Percorso di ricerca nella cartella 'C:\' per la cartella 'PYD'
+        search_path = "C:"
+        pyd_folder = None
+        for root, dirs, files in os.walk(search_path):
+            if 'PYD' in dirs:
+                pyd_folder = os.path.join(root, 'PYD')
+                break
+
+        if not pyd_folder:
+            print("Cartella 'PYD' non trovata.")
+            return
+
+        # Cerca il file .pyd per la versione corretta di Python
+        print(f"Cercando i file .pyd nella cartella: {pyd_folder}")
+        found_files = []
+        for file_name in os.listdir(pyd_folder):
+            if file_name.endswith(".pyd"):
+                found_files.append(file_name)
+                if self.version_str in file_name:
+                    source_file = os.path.join(pyd_folder, file_name)
+                    destination_file = os.path.join(self.target_folder, file_name)
+                    renamed_file = os.path.join(self.target_folder, "kmNet.pyd")
+                    try:
+                        # Rimuove eventuali moduli esistenti con lo stesso nome
+                        if os.path.exists(destination_file):
+                            os.remove(destination_file)
+                        if os.path.exists(renamed_file):
+                            os.remove(renamed_file)
+
+                        # Copia il file e lo rinomina
+                        shutil.copy(source_file, destination_file)
+                        os.rename(destination_file, renamed_file)
+                        print(f"File '{file_name}' copiato con successo e rinominato in '{renamed_file}'.")
+                        return
+                    except Exception as e:
+                        print(f"Errore durante la copia o la rinomina del file: {e}")
+                        return
+
+        print("File trovati:", found_files)
+        print("Nessun file .pyd corrispondente alla versione di Python trovato.")
+
+
 
 class DriverInstaller:
     def __init__(self, driver_name, exe_name, main_window_name):
@@ -142,10 +211,19 @@ class NetworkConfigurator:
         except subprocess.CalledProcessError as e:
             print(f"Errore durante il ping dell'indirizzo IP {ip_address}: {e}")
 
-# Utilizzo delle classi
+# installa driver
 driver_installer = DriverInstaller("WCHUSBNIC.INF", "WCHUSBNIC.EXE", "DriverSetup")
 driver_installer.install_driver()
 
+# installa modulo
+try:
+    handler = InstallationModule()
+    handler.execute()
+    print('Modulo kmNet installato con successo in python')
+except ValueError as e:
+    print(e)
+
+# configura rete di comunicazione
 network_configurator = NetworkConfigurator()
 network_configurator.list_ethernet_devices()
 interface_name = network_configurator.get_interface_name("USB2.0 Ethernet Adapter")
@@ -154,8 +232,6 @@ if not  interface_name:
 if interface_name:
     random_ip = f"192.168.2.{random.randint(200, 240)}"
     network_configurator.set_static_ip(interface_name, random_ip, "255.255.255.0")
-    #time.sleep(2)
     print('verifico connessione,attendere')
     network_configurator.ping_ip(random_ip)
 time.sleep(2)
-
