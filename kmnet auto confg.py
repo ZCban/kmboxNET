@@ -11,6 +11,7 @@ import shutil
 import site
 
 
+
 class InstallationModule:
     def __init__(self):
         self.version = sys.version_info
@@ -75,6 +76,7 @@ class InstallationModule:
 
 
 
+
 class DriverInstaller:
     def __init__(self, driver_name, exe_name, main_window_name):
         self.driver_name = driver_name
@@ -111,7 +113,7 @@ class DriverInstaller:
 
     def list_open_windows(self):
         EnumWindows = ctypes.windll.user32.EnumWindows
-        EnumWindowsProc = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+        EnumWindowsProc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
         GetWindowText = ctypes.windll.user32.GetWindowTextW
         GetWindowTextLength = ctypes.windll.user32.GetWindowTextLengthW
 
@@ -120,10 +122,11 @@ class DriverInstaller:
         def foreach_window(hwnd, lParam):
             if ctypes.windll.user32.IsWindowVisible(hwnd):
                 length = GetWindowTextLength(hwnd)
-                buff = ctypes.create_unicode_buffer(length + 1)
-                GetWindowText(hwnd, buff, length + 1)
-                if buff.value:
-                    titles.append((hwnd, buff.value))
+                if length > 0:
+                    buff = ctypes.create_unicode_buffer(length + 1)
+                    GetWindowText(hwnd, buff, length + 1)
+                    if buff.value:
+                        titles.append((hwnd, buff.value))
             return True
 
         EnumWindows(EnumWindowsProc(foreach_window), 0)
@@ -134,39 +137,89 @@ class DriverInstaller:
             if title.lower() in window_title.lower():
                 ctypes.windll.user32.PostMessageW(hwnd, 0x0010, 0, 0)
 
+    def bring_window_to_foreground(self, hwnd):
+        """Mettere la finestra in primo piano"""
+        try:
+            # Ripristinare la finestra se è minimizzata
+            if ctypes.windll.user32.IsIconic(hwnd):
+                ctypes.windll.user32.ShowWindow(hwnd, 9)  # SW_RESTORE = 9
+            
+            # Portare la finestra in primo piano
+            ctypes.windll.user32.SetForegroundWindow(hwnd)
+            time.sleep(0.2)
+            
+        except Exception as e:
+            print(f"Errore nel mettere la finestra in primo piano: {e}")
+
     def install_driver(self):
-        if self.is_driver_installed():
-            print(f"Il driver {self.driver_name} è già installato.")
-        else:
-            print(f"Il driver {self.driver_name} non è installato. Cerco il file {self.exe_name}...")
-            if self.search_and_run_exe():
-                print(f"Avviato il file {self.exe_name}.")
-                while True:
-                    open_windows = self.list_open_windows()
-                    if any(self.main_window_name in window for hwnd, window in open_windows):
-                        print(f"La finestra '{self.main_window_name}' è aperta. Premo Invio...")
-                        self.press_enter()
+        if self.search_and_run_exe():
+            print(f"Avviato il file {self.exe_name}.")
+            
+            # Attesa per la prima finestra con timeout
+            start_time = time.time()
+            timeout = 60  # 60 secondi di timeout
+            
+            while time.time() - start_time < timeout:
+                open_windows = self.list_open_windows()
+                main_window_found = False
+                main_hwnd = None
+                
+                # Cerca la finestra principale e ottieni il suo handle
+                for hwnd, window in open_windows:
+                    if self.main_window_name in window:
+                        main_window_found = True
+                        main_hwnd = hwnd
                         break
-                    time.sleep(1)
-
-                while True:
-                    open_windows = self.list_open_windows()
-                    driver_setup_windows = [window for hwnd, window in open_windows if self.main_window_name in window]
-                    if len(driver_setup_windows) >= 2:
-                        print(f"Sono aperte due finestre '{self.main_window_name}'. Le chiudo tutte...")
-                        self.close_windows_with_title(self.main_window_name)
-                        break
-                    else:
-                        print(f"In attesa che si apra la seconda finestra '{self.main_window_name}'...")
-                    time.sleep(1)
-
-                if self.is_driver_installed():
-                    print(f"Il driver {self.driver_name} è stato installato correttamente.")
-                else:
-                    print(f"Il driver {self.driver_name} non è stato installato correttamente.")
+                
+                if main_window_found:
+                    print(f"La finestra '{self.main_window_name}' è aperta. Metto in primo piano e premo Invio...")
+                    
+                    # Mettere la finestra in primo piano
+                    self.bring_window_to_foreground(main_hwnd)
+                    time.sleep(0.5)
+                    
+                    # Premere Invio due volte
+                    self.press_enter()
+                    time.sleep(0.5)
+                    self.press_enter()
+                    break
+                    
+                time.sleep(1)
             else:
-                print(f"Il file {self.exe_name} non è stato trovato sul disco C:.")
+                print(f"Timeout: finestra '{self.main_window_name}' non trovata entro {timeout} secondi")
+                return False
 
+            # Attesa per la seconda finestra (completamento installazione) con timeout
+            start_time = time.time()
+            timeout = 300  # 5 minuti di timeout
+            
+            while time.time() - start_time < timeout:
+                open_windows = self.list_open_windows()
+                driver_setup_windows = [window for hwnd, window in open_windows if self.main_window_name in window]
+                
+                if len(driver_setup_windows) >= 2:
+                    print(f"Sono aperte due finestre '{self.main_window_name}'. Le chiudo tutte...")
+                    self.close_windows_with_title(self.main_window_name)
+                    time.sleep(2)  # Attendi che le finestre vengano chiuse
+                    break
+                else:
+                    print(f"In attesa che si apra la seconda finestra '{self.main_window_name}'...")
+                time.sleep(2)
+            else:
+                print(f"Timeout: installazione non completata entro {timeout} secondi")
+                return False
+
+            # Verifica installazione
+            time.sleep(1)  # Attendi ulteriormente per assicurarsi che l'installazione sia completa
+            if self.is_driver_installed():
+                print(f"Il driver {self.driver_name} è stato installato correttamente.")
+                return True
+            else:
+                print(f"Il driver {self.driver_name} non è stato installato correttamente.")
+                return False
+        else:
+            print(f"Il file {self.exe_name} non è stato trovato sul disco C:.")
+            return False
 
 class NetworkConfigurator:
     def list_ethernet_devices(self):
