@@ -98,6 +98,8 @@ int kmNet_init(char* ip, char* port, char* mac)
 	memset(&softkeyboard, 0, sizeof(softkeyboard));
 	err = sendto(sockClientfd, (const char*)&tx, sizeof(cmd_head_t), 0, (struct sockaddr*)&addrSrv, sizeof(addrSrv));
 	Sleep(20);
+	DWORD timeout = 3000; // ~ 3 second timeout
+	setsockopt(sockClientfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
 	int clen = sizeof(addrSrv);
 	err = recvfrom(sockClientfd, (char*)&rx, 1024, 0, (struct sockaddr*)&addrSrv, &clen);
 	if (err < 0)
