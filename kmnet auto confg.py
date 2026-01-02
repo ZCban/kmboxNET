@@ -11,7 +11,6 @@ import shutil
 import site
 
 
-
 class InstallationModule:
     def __init__(self):
         self.version = sys.version_info
@@ -33,19 +32,22 @@ class InstallationModule:
         return f"Python {self.version.major}.{self.version.minor}"
 
     def find_and_copy_pyd_file(self):
-        # Percorso di ricerca nella cartella 'C:\' per la cartella 'PYD'
-        search_path = "C:"
+        # Percorsi di ricerca nella root di ciascuna unità
+        search_drives = ["C:\\", "D:\\", "E:\\"]  # Drive separati
+
         pyd_folder = None
-        for root, dirs, files in os.walk(search_path):
-            if 'PYD' in dirs:
-                pyd_folder = os.path.join(root, 'PYD')
-                break
+        for drive in search_drives:
+            for root, dirs, files in os.walk(drive):
+                if 'PYD' in dirs:
+                    pyd_folder = os.path.join(root, 'PYD')
+                    break
+            if pyd_folder:
+                break  # Se ha trovato la cartella, interrompe la ricerca
 
         if not pyd_folder:
             print("Cartella 'PYD' non trovata.")
             return
 
-        # Cerca il file .pyd per la versione corretta di Python
         print(f"Cercando i file .pyd nella cartella: {pyd_folder}")
         found_files = []
         for file_name in os.listdir(pyd_folder):
@@ -56,16 +58,16 @@ class InstallationModule:
                     destination_file = os.path.join(self.target_folder, file_name)
                     renamed_file = os.path.join(self.target_folder, "kmNet.pyd")
                     try:
-                        # Rimuove eventuali moduli esistenti con lo stesso nome
+                        # Rimuove eventuali file esistenti
                         if os.path.exists(destination_file):
                             os.remove(destination_file)
                         if os.path.exists(renamed_file):
                             os.remove(renamed_file)
 
-                        # Copia il file e lo rinomina
+                        # Copia e rinomina il file
                         shutil.copy(source_file, destination_file)
                         os.rename(destination_file, renamed_file)
-                        print(f"File '{file_name}' copiato con successo e rinominato in '{renamed_file}'.")
+                        print(f"File '{file_name}' copiato e rinominato in '{renamed_file}'.")
                         return
                     except Exception as e:
                         print(f"Errore durante la copia o la rinomina del file: {e}")
@@ -76,150 +78,6 @@ class InstallationModule:
 
 
 
-
-class DriverInstaller:
-    def __init__(self, driver_name, exe_name, main_window_name):
-        self.driver_name = driver_name
-        self.exe_name = exe_name
-        self.main_window_name = main_window_name
-
-    def is_driver_installed(self):
-        try:
-            result = subprocess.run(['powershell', '-Command', 'Get-WindowsDriver -Online'], capture_output=True, text=True, check=True)
-            output = result.stdout
-            return self.driver_name.lower() in output.lower()
-        except subprocess.CalledProcessError as e:
-            print(f"Errore durante l'esecuzione del comando: {e}")
-            return False
-
-    def search_and_run_exe(self):
-        for root, dirs, files in os.walk("C:\\"):
-            if self.exe_name in files:
-                exe_path = os.path.join(root, self.exe_name)
-                try:
-                    subprocess.Popen([exe_path])
-                    return True
-                except Exception as e:
-                    print(f"Errore durante l'avvio del file {self.exe_name}: {e}")
-                    return False
-        return False
-
-    def press_enter(self):
-        VK_RETURN = 0x0D
-        KEYEVENTF_KEYUP = 0x0002
-        ctypes.windll.user32.keybd_event(VK_RETURN, 0, 0, 0)
-        time.sleep(0.05)
-        ctypes.windll.user32.keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0)
-
-    def list_open_windows(self):
-        EnumWindows = ctypes.windll.user32.EnumWindows
-        EnumWindowsProc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
-        GetWindowText = ctypes.windll.user32.GetWindowTextW
-        GetWindowTextLength = ctypes.windll.user32.GetWindowTextLengthW
-
-        titles = []
-
-        def foreach_window(hwnd, lParam):
-            if ctypes.windll.user32.IsWindowVisible(hwnd):
-                length = GetWindowTextLength(hwnd)
-                if length > 0:
-                    buff = ctypes.create_unicode_buffer(length + 1)
-                    GetWindowText(hwnd, buff, length + 1)
-                    if buff.value:
-                        titles.append((hwnd, buff.value))
-            return True
-
-        EnumWindows(EnumWindowsProc(foreach_window), 0)
-        return titles
-
-    def close_windows_with_title(self, title):
-        for hwnd, window_title in self.list_open_windows():
-            if title.lower() in window_title.lower():
-                ctypes.windll.user32.PostMessageW(hwnd, 0x0010, 0, 0)
-
-    def bring_window_to_foreground(self, hwnd):
-        """Mettere la finestra in primo piano"""
-        try:
-            # Ripristinare la finestra se è minimizzata
-            if ctypes.windll.user32.IsIconic(hwnd):
-                ctypes.windll.user32.ShowWindow(hwnd, 9)  # SW_RESTORE = 9
-            
-            # Portare la finestra in primo piano
-            ctypes.windll.user32.SetForegroundWindow(hwnd)
-            time.sleep(0.2)
-            
-        except Exception as e:
-            print(f"Errore nel mettere la finestra in primo piano: {e}")
-
-    def install_driver(self):
-        if self.search_and_run_exe():
-            print(f"Avviato il file {self.exe_name}.")
-            
-            # Attesa per la prima finestra con timeout
-            start_time = time.time()
-            timeout = 60  # 60 secondi di timeout
-            
-            while time.time() - start_time < timeout:
-                open_windows = self.list_open_windows()
-                main_window_found = False
-                main_hwnd = None
-                
-                # Cerca la finestra principale e ottieni il suo handle
-                for hwnd, window in open_windows:
-                    if self.main_window_name in window:
-                        main_window_found = True
-                        main_hwnd = hwnd
-                        break
-                
-                if main_window_found:
-                    print(f"La finestra '{self.main_window_name}' è aperta. Metto in primo piano e premo Invio...")
-                    
-                    # Mettere la finestra in primo piano
-                    self.bring_window_to_foreground(main_hwnd)
-                    time.sleep(0.5)
-                    
-                    # Premere Invio due volte
-                    self.press_enter()
-                    time.sleep(0.5)
-                    self.press_enter()
-                    break
-                    
-                time.sleep(1)
-            else:
-                print(f"Timeout: finestra '{self.main_window_name}' non trovata entro {timeout} secondi")
-                return False
-
-            # Attesa per la seconda finestra (completamento installazione) con timeout
-            start_time = time.time()
-            timeout = 300  # 5 minuti di timeout
-            
-            while time.time() - start_time < timeout:
-                open_windows = self.list_open_windows()
-                driver_setup_windows = [window for hwnd, window in open_windows if self.main_window_name in window]
-                
-                if len(driver_setup_windows) >= 2:
-                    print(f"Sono aperte due finestre '{self.main_window_name}'. Le chiudo tutte...")
-                    self.close_windows_with_title(self.main_window_name)
-                    time.sleep(2)  # Attendi che le finestre vengano chiuse
-                    break
-                else:
-                    print(f"In attesa che si apra la seconda finestra '{self.main_window_name}'...")
-                time.sleep(2)
-            else:
-                print(f"Timeout: installazione non completata entro {timeout} secondi")
-                return False
-
-            # Verifica installazione
-            time.sleep(1)  # Attendi ulteriormente per assicurarsi che l'installazione sia completa
-            if self.is_driver_installed():
-                print(f"Il driver {self.driver_name} è stato installato correttamente.")
-                return True
-            else:
-                print(f"Il driver {self.driver_name} non è stato installato correttamente.")
-                return False
-        else:
-            print(f"Il file {self.exe_name} non è stato trovato sul disco C:.")
-            return False
 
 class NetworkConfigurator:
     def list_ethernet_devices(self):
@@ -264,9 +122,132 @@ class NetworkConfigurator:
         except subprocess.CalledProcessError as e:
             print(f"Errore durante il ping dell'indirizzo IP {ip_address}: {e}")
 
-# installa driver
-driver_installer = DriverInstaller("WCHUSBNIC.INF", "WCHUSBNIC.EXE", "DriverSetup")
-driver_installer.install_driver()
+import os
+import subprocess
+import time
+import pyautogui
+import pygetwindow as gw
+
+class DriverInstaller:
+    def __init__(self, folder_name="upgrade_tools"):
+        self.folder_name = folder_name
+        self.driver_folder = self.find_folder(folder_name)
+        if not self.driver_folder:
+            raise FileNotFoundError(f"❌ Cartella {folder_name} non trovata")
+        print(f"✅ Cartella trovata: {self.driver_folder}")
+
+    # --- Funzioni di utilità ---
+    def find_folder(self, folder_name, start_path="C:\\"):
+        """Trova la cartella ricorsivamente"""
+        for root, dirs, files in os.walk(start_path):
+            if folder_name in dirs:
+                return os.path.join(root, folder_name)
+        return None
+
+    def bring_window_to_front(self, title):
+        """Porta la finestra con il titolo specifico in primo piano"""
+        windows = gw.getWindowsWithTitle(title)
+        if windows:
+            windows[0].activate()
+            return True
+        return False
+
+    def close_window(self, title):
+        """Chiude la finestra con il titolo specifico"""
+        windows = gw.getWindowsWithTitle(title)
+        if windows:
+            for w in windows:
+                w.close()
+            return True
+        return False
+
+    # --- Metodi principali ---
+    def uninstall_driver_gui(self):
+        """Avvia l'exe e automatizza la GUI per disinstallare"""
+        setup_exe = os.path.join(self.driver_folder, "WCHUSBNIC.EXE")
+        if not os.path.exists(setup_exe):
+            print("❌ SETUP.exe non trovato")
+            return
+
+        print(f"✅ Avvio SETUP.exe da: {setup_exe}")
+        proc = subprocess.Popen([setup_exe])
+
+        time.sleep(2)
+
+        window_title = "DriverSetup(X64)"
+        brought = self.bring_window_to_front(window_title)
+        if not brought:
+            print("⚠️ Non sono riuscito a portare la finestra in primo piano. Continua comunque...")
+
+        time.sleep(1)
+
+        pyautogui.press('tab', presses=1, interval=0.5)
+        pyautogui.press('enter')
+        print("✅ Comando di Uninstall inviato")
+
+        proc.wait()
+        print("✅ Disinstallazione completata")
+
+
+        # Elimina i file residui .sys e .cat se presenti
+        residual_files = ["WCHUSBNIC.sys", "WCHUSBNICA64.sys", "WCHUSBNIC.CAT"]
+        for f in residual_files:
+            file_path = os.path.join(self.driver_folder, f)
+            if os.path.exists(file_path):
+                try:
+                    os.remove(file_path)
+                    print(f"✅ Eliminato file residuo: {file_path}")
+                except Exception as e:
+                    print(f"⚠️ Impossibile eliminare {file_path}: {e}")
+            else:
+                print(f"ℹ️ File non trovato (saltato): {file_path}")
+
+        # Aspetta e chiudi la finestra 'DriverSetup'
+        print("⌛ Attendo la comparsa della finestra 'DriverSetup' per chiuderla...")
+        while True:
+            time.sleep(1)
+            if self.close_window("DriverSetup"):
+                print("✅ Finestra 'DriverSetup' chiusa correttamente")
+                break
+
+    def install_driver_gui(self):
+        """Avvia l'exe e automatizza la GUI per installare"""
+        setup_exe = os.path.join(self.driver_folder, "WCHUSBNIC.EXE")
+        if not os.path.exists(setup_exe):
+            print("❌ SETUP.exe non trovato")
+            return
+
+        print(f"✅ Avvio SETUP.exe da: {setup_exe}")
+        proc = subprocess.Popen([setup_exe])
+
+        time.sleep(2)
+
+        window_title = "DriverSetup(X64)"
+        brought = self.bring_window_to_front(window_title)
+        if not brought:
+            print("⚠️ Non sono riuscito a portare la finestra in primo piano. Continua comunque...")
+
+        time.sleep(1)
+        pyautogui.press('enter')
+        print("✅ Comando di Install inviato")
+
+        proc.wait()
+        print("✅ Installazione completata")
+
+        # Aspetta e chiudi la finestra 'DriverSetup'
+        print("⌛ Attendo la comparsa della finestra 'DriverSetup' per chiuderla...")
+        while True:
+            time.sleep(2)
+            if self.close_window("DriverSetup"):
+                print("✅ Finestra 'DriverSetup' chiusa correttamente")
+                break
+
+
+# --- Main ---
+installer = DriverInstaller()
+installer.uninstall_driver_gui()
+installer.install_driver_gui()
+
 
 # installa modulo
 try:
@@ -288,3 +269,6 @@ if interface_name:
     print('verifico connessione,attendere')
     network_configurator.ping_ip(random_ip)
 time.sleep(2)
+
+
+
