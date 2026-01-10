@@ -9,4 +9,16 @@
 8、修复bypass模式下，屏蔽类函数不生效问题。
 9、修复部分8K鼠标回报率只能识别为100Hz问题（8K回报率鼠标请用NB版本）
 如果你有8K鼠标，推荐使用kmboxNB版本，目前大众级顶配版本！
+
 点我查看kmbox NB版本规格
+
+Versione 2026.1.6
+1, supporta fondamentalmente tutti i tipi di pass-through dell'unità mouse (modalità bypass). 
+2. Disattivare la funzione A per impostazione predefinita. 
+3. Essere avvisati dal PCN del chip originale di modificare simultaneamente l'adattamento del codice. 
+4. Risolvere il problema di alcuni mouse che volavano in modalità bypass. 
+5. Risolvere il problema del mouse a controllo morbido che non si muove in modalità bypass. 
+6. Risolvere il problema per cui la tastiera controllata dal software non funziona in modalità bypass. 
+7. Correggi alcuni ritorni anomali dei mouse 8K ad alta velocità. Net supporta solo fino a 1KHz e tutto il supporto superiore a 1K è limitato a 1K 
+8. Risolvere il problema per cui le funzioni della classe di schermatura non sono efficaci in modalità bypass. 
+9. Risolti alcuni ritorni del mouse 8K che possono essere identificati solo come un problema a 100 Hz (si prega di utilizzare la versione NB per i ritorni del mouse 8K) Se si dispone di un mouse 8K, si consiglia di utilizzare la versione kmboxNB, che è attualmente la versione migliore per il grande pubblico!
