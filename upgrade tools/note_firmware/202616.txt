@@ -12,6 +12,17 @@
 
 点我查看kmbox NB版本规格
 
+
+Version 2026.1.6 1, basically support all types of mouse drive pass-through (bypass mode). 
+2. Turn off function A by default. 
+3. Be notified by the original chip PCN to change the code adaptation simultaneously. 
+4. Fix the problem of some mice flying around in bypass mode. 
+5. Fix the problem of soft-controlled mouse not moving in bypass mode. 
+6. Fix the problem that the soft-controlled keyboard does not work in bypass mode. 
+7. Fix some abnormal returns of high-speed 8K mice. Net only supports up to 1KHz, and all support greater than 1K is limited to 1K 
+8. Fix the problem that shielding class functions are not effective in bypass mode.
+9. Fixed some 8K mouse returns that can only be identified as a 100Hz problem (please use the NB version for 8K mouse returns) If you have an 8K mouse, it is recommended to use the kmboxNB version, which is currently the top version for the general public!
+
 Versione 2026.1.6
 1, supporta fondamentalmente tutti i tipi di pass-through dell'unità mouse (modalità bypass). 
 2. Disattivare la funzione A per impostazione predefinita. 
@@ -22,3 +33,4 @@ Versione 2026.1.6
 7. Correggi alcuni ritorni anomali dei mouse 8K ad alta velocità. Net supporta solo fino a 1KHz e tutto il supporto superiore a 1K è limitato a 1K 
 8. Risolvere il problema per cui le funzioni della classe di schermatura non sono efficaci in modalità bypass. 
 9. Risolti alcuni ritorni del mouse 8K che possono essere identificati solo come un problema a 100 Hz (si prega di utilizzare la versione NB per i ritorni del mouse 8K) Se si dispone di un mouse 8K, si consiglia di utilizzare la versione kmboxNB, che è attualmente la versione migliore per il grande pubblico!
+
