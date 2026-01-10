@@ -1,5 +1,11 @@
 Version 2025.12.26
-1.Support GPW2 driver.
-2.Under default mode, function A is turned off.
-3.Code will apply accordingly under requirements of PCN.
-4.Fix the erratic mouse movement issue in bypass mode.
+1. Support GPW2 driver.
+2. Under default mode, function A is turned off.
+3. Code will apply according under requirements of PCN.
+4. Fix the erratic mouse movement issue in bypass mode.
+
+Versione 2025.12.26 
+1. Supporta il driver GPW2. 
+2. In modalità predefinita, la funzione A è disattivata. 
+3. Il codice si applicherà secondo i requisiti del PCN. 
+4. Risolvi il problema del movimento irregolare del mouse in modalità bypass.
