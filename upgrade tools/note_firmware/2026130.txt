@@ -1,0 +1,58 @@
+2026.1.30版
+当期日志
+1、修复部分鼠标无法驱动直通问题（雷蛇）
+2、优化内部曲线。杜绝键鼠标数据异常。欢迎开启尝鲜。
+注意：此曲线为NB版本的阉割版，如需满血版本，推荐使用NB的内置曲线。别问为啥阉割，因为NET性能不够。
+历史日志
+1、基本上支持所有类型鼠标驱动直通（bypass模式）。
+2、默认关闭A功能。
+3、受原厂芯片PCN通知，同步更改代码适配。
+4、修复bypass模式下部分鼠标乱飞问题。
+5、修复bypass模式下软控鼠标不移动问题。
+6、修复bypass模式下软控键盘不生效问题。
+7、修复部分高速8K鼠标回报率异常问题。Net最高只支持1KHz,大于1K的全部限定为1K
+8、修复bypass模式下，屏蔽类函数不生效问题。
+9、修复部分8K鼠标回报率只能识别为100Hz问题（8K回报率鼠标请用NB版本）
+10、修复ROG鼠标识别异常问题。
+11、修复键盘按键识别监控异常问题。
+如果你有8K鼠标，推荐使用kmboxNB版本，目前大众级顶配版本！
+点我查看kmbox NB版本规格
+
+
+Versione 2026.1.30
+Registro corrente
+1. Risolto il problema per cui alcuni mouse (Razer) non riuscivano a bypassare i driver.
+2. Ottimizzata la curva interna. Eliminate le anomalie dei dati di tastiera/mouse. Provatela!
+Nota: questa curva è una versione ridotta dell'edizione NB. Per la versione completa, consigliamo di utilizzare la curva integrata di NB. Non chiedeteci perché è ridotta: le prestazioni di NET semplicemente non sono all'altezza.
+Registro storico
+1.  Ampio supporto per tutte le modalità di bypass dei driver del mouse.
+2.  Disattivazione predefinita della funzione A.
+3.  Adattamento sincronizzato del codice a seguito delle notifiche PCN dei produttori dei chip originali.
+4.  Risoluzione del movimento irregolare del cursore in modalità bypass per alcuni mouse.
+5. Risolto il mancato movimento dei mouse controllati dal software in modalità bypass.
+6. Risolta l'inefficacia delle tastiere controllate dal software in modalità bypass.
+7. Risolti i problemi relativi a frequenze di polling anomale per alcuni mouse 8K ad alta velocità. Net raggiunge un massimo di 1KHz; tutte le frequenze superiori a 1K sono limitate a 1K.
+8. Corretto il malfunzionamento delle funzioni di mascheramento in modalità bypass.
+9. Risolto il problema relativo al riconoscimento errato dei mouse 8K come 100Hz (utilizzare la versione NB per i mouse con frequenza di polling 8K).
+10. Risolto il riconoscimento anomalo dei mouse ROG.
+11. Risolto il monitoraggio anomalo della pressione dei tasti della tastiera.
+Se si dispone di un mouse 8K, si consiglia di utilizzare la versione kmbox NB
+
+
+Current Log
+1. Fixed issue where certain mice (Razer) could not bypass drivers.
+2. Optimised internal curve. Eliminated keyboard/mouse data anomalies. Welcome to try it out.
+Note: This curve is a stripped-down version of the NB edition. For the full-strength version, we recommend using NB's built-in curve. Don't ask why it's stripped down – NET's performance simply isn't up to scratch.
+Historical Log
+1.  Broad support for all mouse driver bypass modes.
+2.  Default deactivation of Function A.
+3.  Synchronised code adaptation following PCN notifications from original chip manufacturers.
+4.  Resolved erratic cursor movement in bypass mode for certain mice.
+5. Resolved non-movement of software-controlled mice in bypass mode.
+6. Fixed ineffectiveness of software-controlled keyboards in bypass mode.
+7. Addressed abnormal polling rates for certain high-speed 8K mice. Net supports a maximum of 1KHz; all rates above 1K are capped at 1K.
+8. Corrected failure of masking functions in bypass mode.
+9. Resolved 8K mouse polling rates being incorrectly recognised as 100Hz (users of 8K polling rate mice should employ the NB version).
+10. Addressed abnormal recognition of ROG mice.
+11. Fixed irregularities in keyboard key press recognition monitoring.
+For users with 8K mice, the KMBOX NB version is recommended
